@@ -11,63 +11,87 @@ def home(request):
     zip_code = models.Zip_Code.objects.all()
     city = models.City.objects.all()
 
+    # Declare zip_query_final and county_query_final to be None
+    #   to avoid an error. Without this, our response_dict would
+    #   be returning a value that isn't in existence.
+    actual_zip_request = None
+    zip_query_final = None
+    actual_county_request = None
+    county_query_final = None
+
     # Initial opening of the page
-    inital = True
-
+    page_initial_opening = True
     # Successful return of the zip code query
-    zsuccess = False
-
+    zip_query_success = False
     # Successful return of the county name query
-    csuccess = False
-
+    county_query_success = False
     # Errors (Errors to return on an invalid query)
     errors = []
 
     # *** Begin logic on POST request ***
     if request.method == "POST":
-        # qz (Query Zip) place holder
-        qz = request.POST.get('zip_search')
+        # Check to see if there is a zip_search in the POST request
+        #   and assign it to 'actual_zip_request'
+        actual_zip_request = request.POST.get('zip_search', None)
 
-        # Ensure 'zip_search' is not empty
+        # Check to see if the zip_search is empty
         if not request.POST.get('zip_search', ''):
             errors.append('Enter a zip code.')
-        # Ensure 'zip_search' is a 5 digit string
-        elif len(qz) != 5:
+        # Check to see if the 'actual_zip_request' is 5 characters long
+        elif len(actual_zip_request) != 5:
             errors.append('Enter a valid 5 digit zip.')
+
         # If the zip code is 5 characters, then continue query
-        if len(qz) == 5:
+        if len(actual_zip_request) == 5:
             # Find all matches with the 5 digit zip code
-            zip_query = models.Zip_Code.objects.filter(zip_code__icontains=qz)
+            #   and assign the results to 'zip_query_final'
+            zip_query_final = models.Zip_Code.objects.filter(zip_code__icontains=actual_zip_request)
+            
             # Set initial opening of the page to False
-            initial = False
-            # Set zip success query to True
-            zsuccess = True
-            # Set 'zip_search' variable to grab the actual query so we can
-            #   return it with the response dictionary
-            zip_search = request.POST.get('zip_search')
-            # 
-            response_dict = {'zip_query':zip_query, 'zsuccess':zsucces,
-                    'initial':initial, 'csuccess':csuccess,
-                    'zip_search':zip_search, 'zip_code':zip_code}
-            return render_to_response('taxapp/home.html', response_dict,
-                    context_instance=RequestContext(request))
+            page_initial_opening = False
+            # Set success on return of zip code query
+            zip_query_success = True
+        
         # Now we are done checking if anything is placed in the zip box,
         #   we will check to see if anything is in the county box.
+        
+        # Check to see if there is a county_search in the POST request
+        #   and assign it to 'actual_county_request'
+        actual_county_request = request.POST.get('county_search', None)
 
         # Ensure 'county_search' is not empty
         if not request.POST.get('county_search', ''):
             errors.append('Enter a county.')
+
         # If the county box is not empty, then continue query
         else:
-            # qc (Query County) place holder
-            qc = request.POST.get('county_search')
-            # Find all matches with the county query search
-            county_query = models.County.objects.filter(name__icontains=qc)
+            # Find all matches with the actual county request
+            #   and assign the results to 'county_query_final'
+            county_query_final = models.County.objects.filter(name__icontains=actual_county_request)
+            
             # Set initial opening of the page to False
-            initial = False
+            page_initial_opening = False
             # Set county success query to True
-            csuccess = True
-            # Set 'county_search' variable to grab the actual query so we can
-            #   return it with the response dictionary
-            county_search = request.POST.get('county_search')
+            county_query_success = True
+            
+    response_dict = {'page_initial_opening':page_initial_opening,
+            'zip_query_success':zip_query_success,
+            'county_query_success':county_query_success,
+            'acutal_zip_request':actual_zip_request,
+            'actual_county_request':actual_county_request,
+            'zip_query_final':zip_query_final,
+            'county_query_final':county_query_final,
+            'county':county, 'zip_code':zip_code, 'city':city}
+    return render_to_response('taxapp/home.html', response_dict,
+            context_instance=RequestContext(request))
 
+# This view fuction does a get county call when the user clicks the
+#   county feature on the vector layer map. It allows for the return
+#   of the tax rate associated with the feature.
+
+def get_county(request, county_name=None):
+    if county_name is None:
+        return HttpResponse('No County Provided')
+    county_object = models.County.objects.filter(name__icontains=county_name)[0]
+    tax_rate = county_object.tax_rate
+    return HttpResponse(tax_rate)

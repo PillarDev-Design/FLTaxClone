@@ -101,7 +101,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-ROOT_URLCONF = 'FLTax.urls'
+ROOT_URLCONF = 'urls'
+
 
 ROOT_PATH = os.path.realpath(os.path.dirname(__file__))
 

@@ -16,7 +16,7 @@ class Zip_Code(models.Model):
     zip_code = models.CharField(max_length = 5)
     county = models.ForeignKey(County)
     def __unicode__(self):
-        return (self)
+        return (self.zip_code)
 
 # A city can have multiple zip codes associated.
 class City(models.Model):

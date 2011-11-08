@@ -1,0 +1,136 @@
+/* ========================================================================    
+ *
+ * style.css
+ * ------------
+ *
+ * Main CSS style file, applied to all pages
+ *
+ * ======================================================================== */
+/* ========================================================================    
+ *
+ *  DEFAULT OVERRIDES
+ *
+ * ======================================================================== */
+body, html {
+    background: #f7f7f7;
+    font-family: Arial, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color:#336699;
+    text-decoration:none;
+}
+a:hover {
+    color:#A28167;
+}
+/* --------------------------------------
+ * Headers (Override h1, h2, etc. here) if necessary
+ * -------------------------------------- */
+h1 {
+}
+
+h2 {
+}
+
+h3 {
+}
+
+h4{
+}
+
+/* --------------------------------------
+ * Pre (for code blocks) 
+ * -------------------------------------- */
+pre {
+    background:#383838;
+    border:1px dashed #787878;
+    color:#22ff22;
+    font-size:.8em;
+    font-family: monospace, sans-serif;
+    padding:.3em;
+    text-shadow:none;
+}
+
+/* ========================================================================    
+ *
+ *                              LAYOUT
+ *
+ * ======================================================================== */
+/* --------------------------------------
+ * Logo
+ * -------------------------------------- */
+#logo_wrapper {
+    margin:0 0 1em 0;
+    text-align:center;
+}
+#logo_wrapper h1 {
+    color:#505050;
+    font-size:3em;
+    margin:0;
+}
+/* --------------------------------------
+ * Site Navigation 
+ * -------------------------------------- */
+#site_nav_wrapper {
+    border-bottom:1px solid #343434;
+    border-top:1px solid #343434;
+    padding:.5em .3em;
+    text-align:center;
+}
+/*Override link styles*/
+#site_nav_wrapper a{
+    display: inline;
+    font-size:1.6em;
+    font-weight:bold;
+    margin:0 3em;
+}
+/* --------------------------------------
+ * Main Content 
+ * -------------------------------------- */
+#content_wrapper {
+}
+    #left_side_wrapper {
+        border-right:1px solid #343434;
+        float:left;
+        margin: 0 2% 0 0;
+        padding:0 1%;
+        width:20%;
+    }
+        /*Make links on the left side a little smaller*/
+        #left_side_wrapper a{
+            font-size:.9em;
+        }
+        #recent_blog_posts {
+            padding:0 0 15px 0;
+            border-bottom:1px solid #343434;
+        }
+    #right_side_wrapper {
+        float:left;
+        padding:0 1%;
+        width:70%;
+    }
+    
+/* --------------------------------------
+ * Footer
+ * -------------------------------------- */
+#footer_wrapper {
+    border-top:1px solid #343434;
+    font-size:.9em;
+    margin:0;
+    padding:1%;
+    text-align:right;
+}
+/* ========================================================================    
+ *
+ *                              REUSABLE CLASSES
+ *
+ * ======================================================================== */
+.clear {
+    clear:both;
+}
+
+.olLayerGoogleCopyright {
+    display:none;
+}

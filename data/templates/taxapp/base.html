@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang='en'>
+    <head>
+        <meta charset='UTF-8'>
+        <title>Florida Tax Rates</title>
+        <link href='/staticfiles/style.css' rel='stylesheet' type='text/css' />
+    </head>
+    <body>
+        <!-- Logo Wrapper -->
+        <div id='logo_wrapper'>
+            <h1>Florida Tax Rates</h1>
+        </div>
+        <!-- Site Navigation Wrapper -->
+        <div id='site_nav_wrapper'>
+
+        </div>
+        <!-- Block Content -->
+        {% block content %}{% endblock content %}
+
+        <!-- Footer Wrapper -->
+        <div id='footer_wrapper'>
+            Pillar Dev & Designs | Chris Nabors
+        </div>
+
+        <!-- We place the map resources last to ensure that they are loaded
+        before we register events -->
+        <!-- Load OpenLayers.js -->
+        <script type='text/javascript' src='/staticfiles/OpenLayers.js'></script>
+        <!-- Link to Google Maps server for base layer -->
+        <script src='http://maps.google.com/maps/api/js?sensor=false&v=3.2'></script>
+        <!-- Load the taxapp.js file which organizes and computes the map data. -->
+        <script type='text/javascript' src='/staticfiles/taxapp.js'></script>
+
+        <!-- We place the following script inside of this HTML file because
+        we need to run Django specific variable commands which can't be executed
+        inside of a javascript file. -->
+        <script type='text/javascript'>
+            // After everything loads, call init() to setup map
+            // init() is located in the taxapp.js file
+            init();
+
+            // After calling init, see if we should highlight a county
+            // We choose map.layers[1] because it is the vector layer
+            map.layers[1].events.register(
+                'loadend',
+                this,
+                function(){
+                    {% if zip_query_success %}
+                        {% for zip in zip_query_final %}
+                            // highlight_feature() is located in taxapp.js
+                            highlight_feature("{{zip.county}}");
+                        {% endfor %}
+                    {% endif %}
+                    {% if county_query_success %}
+                        {% for county in county_query_final %}
+                            // highlight_feature() is located in taxapp.js
+                            highlight_feature("{{county}}");
+                        {% endfor %}
+                    {% endif %}
+                });
+        </script>
+    </body>
+</html>

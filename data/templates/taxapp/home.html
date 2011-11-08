@@ -1,0 +1,73 @@
+{% extends 'taxapp/base.html' %}
+{% block content %}
+<div id='content_wrapper'>
+    <!-- BEGIN LEFT SIDE WRAPPER -->
+    <div id='left_side_wrapper'>
+        <div id='left_search'>
+            <!-- Place POST form request here -->
+            <form action="/" method="POST">{% csrf_token %}
+                <p>Zip Code: <input type="text" name="zip_search"></p>
+                <p>County: <input type="text" name="county_search"></p>
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+        <div id='left_content'>
+            <!-- Place errors here -->
+            {% if errors %}
+                <ul>
+                    {% for error in errors %}
+                        <li>{{error}}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <!-- Place initial page opening code here -->
+            {% if page_initial_opening %}
+                <h5>Please enter a valid 5 digit Florida zip code
+                    or a full/partial county name.</h5>
+            {% endif %}
+            <!-- *** ZIP CODE SUCCESS LOGIC *** -->
+            {% if zip_query_success %}
+                <p>You searched for: <strong>{{actual_zip_request}}</strong></p>
+                <p>Found <strong>{{zip_query_final|length}}</strong> zip code result{{zip_query_final|pluralize}}.</p>
+                <ul>
+                    {% for zip in zip_query_final %}
+                        <li>Zip Code: <strong>{{zip}}</strong></li>
+                        <li>County: <strong>{{zip.county}}</strong></li>
+                        <li>Tax Rate: <strong>{{zip.county.tax_rate}}</strong></li>
+                        {% for cityresult in zip.city_set.all %}
+                            <li>City: <strong>{{cityresult.name}}</strong></li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <!-- *** END ZIP CODE SUCCESS LOGIC *** -->
+
+            <!-- *** COUNTY SUCCESS LOGIC *** -->
+            {% if county_query_success %}
+                <p>You searched for: <strong>{{actual_county_request}}</strong></p>
+                <p>Found <strong>{{county_query_final|length}}</strong> county result{{county_query_final|pluralize}}</p>
+                <ul>
+                    {% for county in county_query_final %}
+                        <li>County: <strong>{{county}}</strong></li>
+                        <li>Tax Rate: <strong>{{county.tax_rate}}</strong></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <!-- *** END COUNTY SUCCESS LOGIC *** -->
+        </div>
+    </div>
+    <!-- END LEFT SIDE WRAPPER -->
+
+    <!-- CENTER PAGE CONTENT -->
+    <div id='right_side_wrapper'>
+        <div id='content'>
+            <!-- Map goes here -->
+            <div id='map_element' style='width: 500px; height: 500px;'></div>
+        </div>
+    </div>
+    <!-- END CENTER PAGE CONTENT -->
+    <div style="clear:both;"></div>
+</div>
+
+
+{% endblock content %}
