@@ -18,6 +18,7 @@ def home(request):
     zip_query_final = None
     actual_county_request = None
     county_query_final = None
+    city_result = None
 
     # Initial opening of the page
     page_initial_opening = True
@@ -46,6 +47,7 @@ def home(request):
             # Find all matches with the 5 digit zip code
             #   and assign the results to 'zip_query_final'
             zip_query_final = models.Zip_Code.objects.filter(zip_code__icontains=actual_zip_request)
+            city_result = models.City.objects.filter(zip_code__icontains=actual_zip_request)
             
             # Set initial opening of the page to False
             page_initial_opening = False
@@ -73,7 +75,11 @@ def home(request):
             page_initial_opening = False
             # Set county success query to True
             county_query_success = True
-            
+    
+    # The response dictionary will return all the values.
+    # Without declaring the values in the beginning of the home request
+    #   and seeing if the POST request has values in them, the response
+    #   dictionary would return values that haven't been declared
     response_dict = {'page_initial_opening':page_initial_opening,
             'zip_query_success':zip_query_success,
             'county_query_success':county_query_success,
@@ -81,6 +87,7 @@ def home(request):
             'actual_county_request':actual_county_request,
             'zip_query_final':zip_query_final,
             'county_query_final':county_query_final,
+            'city_result':city_result,
             'county':county, 'zip_code':zip_code, 'city':city}
     return render_to_response('taxapp/home.html', response_dict,
             context_instance=RequestContext(request))

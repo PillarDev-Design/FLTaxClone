@@ -21,6 +21,7 @@ class Zip_Code(models.Model):
 # A city can have multiple zip codes associated.
 class City(models.Model):
     name = models.CharField(max_length = 255)
-    zip_code = models.ManyToManyField(Zip_Code)
+    #zip_code = models.ManyToManyField(Zip_Code)
+    zip_code = models.CharField(max_length = 5)
     def __unicode__(self):
         return (self.name)

@@ -34,7 +34,7 @@
                         <li>Zip Code: <strong>{{zip}}</strong></li>
                         <li>County: <strong>{{zip.county}}</strong></li>
                         <li>Tax Rate: <strong>{{zip.county.tax_rate}}</strong></li>
-                        {% for cityresult in zip.city_set.all %}
+                        {% for cityresult in city_result %}
                             <li>City: <strong>{{cityresult.name}}</strong></li>
                         {% endfor %}
                     {% endfor %}
